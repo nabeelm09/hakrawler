@@ -45,6 +45,7 @@ func main() {
 	proxy := flag.String(("proxy"), "", "Proxy URL. E.g. -proxy http://127.0.0.1:8080")
 	timeout := flag.Int("timeout", -1, "Maximum time to crawl each URL from stdin, in seconds.")
 	disableRedirects := flag.Bool("dr", false, "Disable following HTTP redirects.")
+	strict := flag.Bool("strict", false, "Only return URLs from the specified domain.")
 
 	flag.Parse()
 
@@ -125,6 +126,12 @@ func main() {
 			c.OnHTML("a[href]", func(e *colly.HTMLElement) {
 				link := e.Attr("href")
 				abs_link := e.Request.AbsoluteURL(link)
+				    // Enforce strict mode: only process URLs from the specified domain
+					if *strict {
+						if !strings.Contains(absLink, url) {
+							return
+						}
+					}
 				if strings.Contains(abs_link, url) || !*inside {
 
 					printResult(link, "href", *showSource, *showWhere, *showJson, results, e)
