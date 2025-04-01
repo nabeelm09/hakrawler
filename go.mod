@@ -1,4 +1,4 @@
-module github.com/namera/hawkrawler
+module github.com/nabeelm09/hakrawler
 
 go 1.23.0
 
